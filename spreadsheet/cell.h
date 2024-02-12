@@ -27,6 +27,7 @@ private:
     class EmptyImpl;
     class TextImpl;
     class FormulaImpl;
+    void UpdateOutgoingEdges();
     bool WouldIntroduceCircularDependency(const Impl& new_impl) const;
     void InvalidateCacheRecursive(bool force = false);
 

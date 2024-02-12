@@ -48,17 +48,22 @@ public:
 
     Value Evaluate(const SheetInterface& sheet) const override {
         const std::function<double(Position)> args = [&sheet](const Position p)->double {
-            if (!p.IsValid()) throw FormulaError(FormulaError::Category::Ref);
-
+            if (!p.IsValid()) {
+                throw FormulaError(FormulaError::Category::Ref);
+            }
             const auto* cell = sheet.GetCell(p);
             if (!cell) return 0;
-            if (std::holds_alternative<double>(cell->GetValue())) return std::get<double>(cell->GetValue());
+            if (std::holds_alternative<double>(cell->GetValue())) {
+                return std::get<double>(cell->GetValue());
+            } 
             if (std::holds_alternative<std::string>(cell->GetValue())) {
                 auto value = std::get<std::string>(cell->GetValue());
                 double result = 0;
                 if (!value.empty()) {
                     std::istringstream in(value);
-                    if (!(in >> result) || !in.eof()) throw FormulaError(FormulaError::Category::Value);
+                    if (!(in >> result) || !in.eof()) {
+                        throw FormulaError(FormulaError::Category::Value);
+                    }
                 }
                 return result;
             }
@@ -76,7 +81,9 @@ public:
     std::vector<Position> GetReferencedCells() const override {
         std::vector<Position> cells;
         for (auto cell : ast_.GetCells()) {
-            if (cell.IsValid()) cells.push_back(cell);
+            if (cell.IsValid()) {
+                cells.push_back(cell);
+            }
         }
         cells.resize(std::unique(cells.begin(), cells.end()) - cells.begin());
         return cells;
